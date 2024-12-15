@@ -1,0 +1,28 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: php_app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./src:/var/www/html
+    networks:
+      - php_network
+
+  nginx:
+    image: nginx:alpine
+    container_name: php_nginx
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src:/var/www/html
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    networks:
+      - php_network
+
+networks:
+  php_network:
+    driver: bridge
